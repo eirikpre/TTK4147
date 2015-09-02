@@ -1,0 +1,7 @@
+fork.txt
+
+
+
+Run the program with fork() and then with vfork(). Why are the results different?
+
+With vfork() the parent thread gets temporarily suspended. 
