@@ -5,3 +5,8 @@ fork.txt
 Run the program with fork() and then with vfork(). Why are the results different?
 
 With vfork() the parent thread gets temporarily suspended. 
+
+
+If fork is used at the end of main() without a sleep or other means, the entire program will exit.
+
+vfork ensures the program will continue. (in my case)
