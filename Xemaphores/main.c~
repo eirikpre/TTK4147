@@ -1,0 +1,138 @@
+#include "io.h"
+#include <pthread.h>
+#include <unistd.h>
+#include <sched.h>
+#include <time.h>
+#include <sys/mman.h>
+
+#include <native/task.h>
+#include <native/timer.h>
+#include <rtdk.h>
+#include <native/sem.h>
+
+
+
+
+RT_SEM semA;
+RT_SEM semB;
+RT_SEM syncsem;
+
+void busy_wait_ms(unsigned long delay);
+void print_pri(RT_TASK *task, char s);
+int rt_task_sleep_ms(unsigned long delay);
+
+void task_function(void* data)
+{
+	//rt_sem_p(sem, TM_INFINITE);
+	print_pri(NULL,(char) data);
+	//rt_sem_v(sem);
+
+}
+
+void task_L(void* data)
+{
+	rt_sem_p(&syncsem,TM_INFINITE);
+	rt_task_set_priority(NULL,99);
+	rt_sem_p(&semA,TM_INFINITE);
+	rt_printf("L : I got A\n");
+	busy_wait_ms(3);
+	rt_sem_p(&semB,TM_INFINITE);
+	busy_wait_ms(3);
+	print_pri(NULL,(char) data);
+	rt_sem_v(&semB);
+	rt_sem_v(&semA);
+}
+
+void task_M(void* data)
+{
+	rt_sem_p(&syncsem,TM_INFINITE);
+	rt_task_sleep_ms(1);
+	//rt_sem_p(sem,TM_INFINITE);
+	busy_wait_ms(5);
+	print_pri(NULL,(char) data);
+	//rt_sem_v(sem,TM_INFINITE);
+}
+
+void task_H(void* data)
+{
+	rt_sem_p(&syncsem,TM_INFINITE);
+	rt_task_sleep_ms(1);
+	rt_sem_p(&semB,TM_INFINITE);
+	rt_printf("H : I got B\n");
+	busy_wait_ms(1);
+	rt_sem_p(&semA,TM_INFINITE);
+	busy_wait_ms(2);
+	print_pri(NULL,(char) data);
+	rt_sem_v(&semB);
+	rt_sem_v(&semA);
+}
+
+int main(){
+	mlockall(MCL_CURRENT | MCL_FUTURE);
+	rt_print_auto_init(1);
+
+	
+	rt_sem_create(&semA, "A", 1, S_FIFO | S_PRIO);
+	rt_sem_create(&semB, "B", 1, S_FIFO | S_PRIO);
+	rt_sem_create(&syncsem, "ss", 0, S_FIFO);
+	RT_TASK tasks[3];
+	
+
+	rt_task_create(tasks, "C", 0, 99, T_CPU(0)|T_JOINABLE);
+	//rt_task_create(&(tasks[1]), "B", 0, 50, T_CPU(0));
+	rt_task_create(tasks+2, "D", 0, 33, T_CPU(0));
+
+	rt_task_start(&(tasks[0]),&task_H,(void*)'H'); 
+	//rt_task_start(&(tasks[1]),&task_M,(void*)'M');
+	rt_task_start(&(tasks[2]),&task_L,(void*)'L');
+	 
+
+	rt_task_shadow(NULL, "main", 0, 0);
+	rt_task_sleep_ms(200);
+	rt_sem_broadcast(&syncsem);
+	//rt_task_sleep_ms(2000);
+
+	rt_task_join(tasks);
+	rt_task_join(tasks+2);
+	rt_sem_delete(&semA);
+	rt_sem_delete(&semB);
+
+/*
+	pthread_t disturbance[10];
+	for (i=0; i<10; i++){
+		pthread_create(&(disturbance[i]),NULL,&busy_wait,NULL);
+	}
+	
+	for (i=0; i<10; i++){
+		pthread_join(disturbance[i],NULL);
+	}
+*/
+
+	return 0;
+};
+
+void busy_wait_ms(unsigned long delay)
+{
+	unsigned long count = 0;
+	while (count <= delay*10){
+		rt_timer_spin(1000*100);
+		count++;
+	}
+}
+
+void print_pri(RT_TASK *task, char s)
+{
+	struct rt_task_info temp;
+	rt_task_inquire(task, &temp);
+	rt_printf("b:%i c:%i ", temp.bprio, temp.cprio);
+	rt_printf("Task is done: %c\n",s );
+}
+
+int rt_task_sleep_ms(unsigned long delay)
+{
+	return rt_task_sleep(1000*1000*delay);
+}
+
+
+
+
