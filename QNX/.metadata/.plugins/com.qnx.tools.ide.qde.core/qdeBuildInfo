@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QdeProjectsBuildInfo>
+<qdeBuildInfo IMemento.internal.id="C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1" buildConfig="_x86_r" projectName="qnx_1">
+<srcDirs>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1/x86/o</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1/x86</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1</element>
+</srcDirs>
+<libDirs>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1/x86/o</element>
+<element>C:/QNX650/target/qnx6/x86/lib</element>
+<element>C:/QNX650/target/qnx6/x86/usr/lib</element>
+</libDirs>
+<incDirs>
+<element>C:/QNX650/target/qnx6/usr/include</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1/x86/o</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1/x86</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1</element>
+</incDirs>
+<libs/>
+<SRCS>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_1/qnx_1.c</element>
+</SRCS>
+</qdeBuildInfo>
+<qdeBuildInfo IMemento.internal.id="C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2" buildConfig="_x86_r" projectName="qnx_2">
+<srcDirs>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2/x86/o</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2/x86</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2</element>
+</srcDirs>
+<libDirs>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2/x86/o</element>
+<element>C:/QNX650/target/qnx6/x86/lib</element>
+<element>C:/QNX650/target/qnx6/x86/usr/lib</element>
+</libDirs>
+<incDirs>
+<element>C:/QNX650/target/qnx6/usr/include</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2/x86/o</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2/x86</element>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2</element>
+</incDirs>
+<libs/>
+<SRCS>
+<element>C:/Users/TEMP/Desktop/ttk4147/QNX/qnx_2/qnx_2.c</element>
+</SRCS>
+</qdeBuildInfo>
+</QdeProjectsBuildInfo>

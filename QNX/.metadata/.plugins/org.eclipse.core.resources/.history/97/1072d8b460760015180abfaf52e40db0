@@ -1,0 +1,67 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/dispatch.h>
+#include <sys/mman.h>
+#include <pthread.h>
+
+struct pid_data{
+	pthread_mutex_t pid_mutex;
+	pid_t pid;
+};
+
+struct msg_info_t{
+	pid_t pid;
+	int thread_id;
+};
+
+
+struct pid_data *my_pid_addr;
+char buffer[20];
+void msg_client(void* a);
+void program_two();
+
+void msg_client(void* a)
+{
+	struct msg_info_t msg;
+	msg.pid = getpid();
+	msg.thread_id = (int)a;
+
+	int chan_id = ConnectAttach(0,my_pid_addr->pid, 1,0,0);
+	MsgSend(chan_id, &msg, sizeof(msg), &buffer, sizeof(buffer));
+	printf("CLIENT: Received msg: %s\n",buffer);
+	ConnectDetach(chan_id);
+}
+
+
+int main(int argc, char *argv[])
+{
+
+	program_two();
+	printf("Program Two: PID: %d\n",my_pid_addr->pid);
+	usleep(200);
+	pthread_t threads[4];
+
+	int i;
+	for (i=0; i<4; i++)
+	{
+		pthread_create(&(threads[i]),NULL, msg_client ,(void*)i);
+	}
+
+	for (i=0; i<4; i++)
+	{
+		pthread_join(threads[i],NULL);
+	}
+
+	return EXIT_SUCCESS;
+}
+
+void program_two()
+{
+	int f_desc = shm_open("/sharedpid", O_RDWR | O_CREAT, S_IRWXU);
+	my_pid_addr = (struct pid_data*)mmap(0, sizeof(struct pid_data), PROT_READ | PROT_WRITE, MAP_SHARED, f_desc, 0);
+}
+
