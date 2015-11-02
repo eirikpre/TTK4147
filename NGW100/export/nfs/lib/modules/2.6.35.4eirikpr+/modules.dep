@@ -1,0 +1,88 @@
+kernel/fs/configfs/configfs.ko:
+kernel/fs/fat/fat.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/fat/vfat.ko: kernel/fs/fat/fat.ko kernel/fs/nls/nls_base.ko
+kernel/fs/fat/msdos.ko: kernel/fs/fat/fat.ko kernel/fs/nls/nls_base.ko
+kernel/fs/exportfs/exportfs.ko:
+kernel/fs/nfsd/nfsd.ko: kernel/fs/exportfs/exportfs.ko
+kernel/fs/nls/nls_base.ko:
+kernel/fs/nls/nls_cp437.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/nls/nls_cp850.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/nls/nls_iso8859-1.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/nls/nls_utf8.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/smbfs/smbfs.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/cifs/cifs.ko: kernel/fs/nls/nls_base.ko
+kernel/fs/fuse/fuse.ko:
+kernel/crypto/ecb.ko:
+kernel/crypto/pcbc.ko:
+kernel/crypto/aes_generic.ko:
+kernel/crypto/arc4.ko:
+kernel/crypto/ansi_cprng.ko:
+kernel/drivers/block/brd.ko:
+kernel/drivers/block/loop.ko:
+kernel/drivers/block/nbd.ko:
+kernel/drivers/misc/eeprom/at24.ko: kernel/drivers/i2c/i2c-core.ko
+kernel/drivers/spi/spidev.ko:
+kernel/drivers/net/ppp_generic.ko: kernel/drivers/net/slhc.ko
+kernel/drivers/net/ppp_async.ko: kernel/drivers/net/ppp_generic.ko kernel/drivers/net/slhc.ko kernel/lib/crc-ccitt.ko
+kernel/drivers/net/ppp_deflate.ko: kernel/drivers/net/ppp_generic.ko kernel/drivers/net/slhc.ko
+kernel/drivers/net/bsd_comp.ko: kernel/drivers/net/ppp_generic.ko kernel/drivers/net/slhc.ko
+kernel/drivers/net/ppp_mppe.ko: kernel/drivers/net/ppp_generic.ko kernel/drivers/net/slhc.ko
+kernel/drivers/net/pppox.ko: kernel/drivers/net/ppp_generic.ko kernel/drivers/net/slhc.ko
+kernel/drivers/net/pppoe.ko: kernel/drivers/net/pppox.ko kernel/drivers/net/ppp_generic.ko kernel/drivers/net/slhc.ko
+kernel/drivers/net/slhc.ko:
+kernel/drivers/net/tun.ko:
+kernel/drivers/usb/gadget/g_zero.ko:
+kernel/drivers/usb/gadget/g_ether.ko:
+kernel/drivers/usb/gadget/gadgetfs.ko:
+kernel/drivers/usb/gadget/g_file_storage.ko:
+kernel/drivers/usb/gadget/g_serial.ko:
+kernel/drivers/usb/gadget/g_cdc.ko:
+kernel/drivers/i2c/algos/i2c-algo-bit.ko: kernel/drivers/i2c/i2c-core.ko
+kernel/drivers/i2c/busses/i2c-gpio.ko: kernel/drivers/i2c/algos/i2c-algo-bit.ko kernel/drivers/i2c/i2c-core.ko
+kernel/drivers/i2c/i2c-core.ko:
+kernel/drivers/i2c/i2c-dev.ko: kernel/drivers/i2c/i2c-core.ko
+kernel/drivers/mmc/card/mmc_test.ko:
+kernel/drivers/mmc/host/mmc_spi.ko: kernel/lib/crc7.ko kernel/lib/crc-itu-t.ko
+kernel/arch/avr32/oprofile/oprofile.ko:
+kernel/net/802/p8022.ko: kernel/net/llc/llc.ko
+kernel/net/802/psnap.ko: kernel/net/llc/llc.ko
+kernel/net/802/stp.ko: kernel/net/llc/llc.ko
+kernel/net/netfilter/nfnetlink.ko:
+kernel/net/netfilter/nfnetlink_log.ko: kernel/net/netfilter/nfnetlink.ko
+kernel/net/netfilter/nf_conntrack.ko:
+kernel/net/netfilter/nf_conntrack_netlink.ko: kernel/net/netfilter/nf_conntrack.ko kernel/net/netfilter/nfnetlink.ko
+kernel/net/netfilter/nf_conntrack_ftp.ko: kernel/net/netfilter/nf_conntrack.ko
+kernel/net/netfilter/nf_conntrack_irc.ko: kernel/net/netfilter/nf_conntrack.ko
+kernel/net/netfilter/nf_conntrack_sip.ko: kernel/net/netfilter/nf_conntrack.ko
+kernel/net/netfilter/xt_mark.ko:
+kernel/net/netfilter/xt_NFLOG.ko: kernel/net/netfilter/nfnetlink_log.ko kernel/net/netfilter/nfnetlink.ko
+kernel/net/netfilter/xt_TCPMSS.ko:
+kernel/net/netfilter/xt_conntrack.ko: kernel/net/netfilter/nf_conntrack.ko
+kernel/net/netfilter/xt_policy.ko:
+kernel/net/netfilter/xt_state.ko: kernel/net/netfilter/nf_conntrack.ko
+kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko: kernel/net/netfilter/nf_conntrack.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko
+kernel/net/ipv4/netfilter/nf_nat.ko: kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko kernel/net/netfilter/nf_conntrack.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko
+kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko:
+kernel/net/ipv4/netfilter/nf_nat_ftp.ko: kernel/net/ipv4/netfilter/nf_nat.ko kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko kernel/net/netfilter/nf_conntrack_ftp.ko kernel/net/netfilter/nf_conntrack.ko
+kernel/net/ipv4/netfilter/nf_nat_irc.ko: kernel/net/ipv4/netfilter/nf_nat.ko kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko kernel/net/netfilter/nf_conntrack_irc.ko kernel/net/netfilter/nf_conntrack.ko
+kernel/net/ipv4/netfilter/nf_nat_sip.ko: kernel/net/netfilter/nf_conntrack_sip.ko kernel/net/ipv4/netfilter/nf_nat.ko kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko kernel/net/netfilter/nf_conntrack.ko
+kernel/net/ipv4/netfilter/ip_tables.ko:
+kernel/net/ipv4/netfilter/iptable_filter.ko: kernel/net/ipv4/netfilter/ip_tables.ko
+kernel/net/ipv4/netfilter/iptable_mangle.ko: kernel/net/ipv4/netfilter/ip_tables.ko
+kernel/net/ipv4/netfilter/iptable_nat.ko: kernel/net/ipv4/netfilter/ip_tables.ko kernel/net/ipv4/netfilter/nf_nat.ko kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko kernel/net/netfilter/nf_conntrack.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko
+kernel/net/ipv4/netfilter/ipt_LOG.ko:
+kernel/net/ipv4/netfilter/ipt_MASQUERADE.ko: kernel/net/ipv4/netfilter/nf_nat.ko kernel/net/ipv4/netfilter/nf_conntrack_ipv4.ko kernel/net/ipv4/netfilter/nf_defrag_ipv4.ko kernel/net/netfilter/nf_conntrack.ko
+kernel/net/ipv4/netfilter/ipt_REJECT.ko:
+kernel/net/ipv6/netfilter/ip6_tables.ko:
+kernel/net/ipv6/netfilter/ip6table_filter.ko: kernel/net/ipv6/netfilter/ip6_tables.ko
+kernel/net/ipv6/netfilter/ip6table_mangle.ko: kernel/net/ipv6/netfilter/ip6_tables.ko
+kernel/net/ipv6/netfilter/nf_conntrack_ipv6.ko: kernel/net/netfilter/nf_conntrack.ko
+kernel/net/ipv6/netfilter/ip6t_ipv6header.ko: kernel/net/ipv6/netfilter/ip6_tables.ko
+kernel/net/ipv6/netfilter/ip6t_LOG.ko: kernel/net/ipv6/netfilter/ip6_tables.ko
+kernel/net/ipv6/netfilter/ip6t_REJECT.ko:
+kernel/net/8021q/8021q.ko:
+kernel/net/llc/llc.ko:
+kernel/net/bridge/bridge.ko: kernel/net/802/stp.ko kernel/net/llc/llc.ko
+kernel/lib/crc-ccitt.ko:
+kernel/lib/crc-itu-t.ko:
+kernel/lib/crc7.ko:
