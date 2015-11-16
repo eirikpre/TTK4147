@@ -37,14 +37,14 @@ int udp_send(struct udp_conn *udp, char *buf, int len)
 }
 
 int udp_receive(struct udp_conn *udp, char *buf, int len)
-{
-	printf("im here\n");
+{	
 	int res = recvfrom(	udp->sock, 
 						buf, 
 						len, 
 						0, 
 						(struct sockaddr *)&(udp->client), 
 						&(udp->client_len));
+
 	return res;
 }
 
@@ -54,7 +54,7 @@ void udp_close(struct udp_conn *udp)
 	return;
 }
 
-int clock_nanosleep2(struct timespec *next)
+int clock_nanosleep(struct timespec *next)
 {
 	struct timespec now;
 	struct timespec sleep;

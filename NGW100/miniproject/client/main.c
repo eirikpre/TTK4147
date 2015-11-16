@@ -1,0 +1,145 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+#include <pthread.h>
+#include <semaphore.h>
+
+#include "miniproject.h"
+
+#define timercmp(a, b, CMP)                                                  \
+  (((a)->tv_sec == (b)->tv_sec) ?                                             \
+   ((a)->tv_nsec CMP (b)->tv_nsec) :                                          \
+   ((a)->tv_sec CMP (b)->tv_sec))
+
+const double Ki = 800;
+const double Kp = 10;
+
+volatile int RUN_THREADS = 1;
+volatile double y;
+
+struct udp_conn udp_socket;
+
+pthread_mutex_t udp_lock;
+sem_t rcv_y;
+sem_t rcv_sig;
+
+void send_to_server(char *);
+void* udp_server( void *);
+void* pid_controller( void *);
+void* response_process( void* a );
+
+int main ( void ) 
+{
+	////////////////////////// SETUP UDP /////////////////////////////////
+	if ( udp_init_client(&udp_socket, 9999 , "192.168.0.1") == 1) {
+		printf("Error_udp_init");
+		return 1;
+	}
+	pthread_t udp_thread;
+	pthread_mutex_init(&udp_lock,NULL);
+	pthread_create(&udp_thread, NULL, udp_server, NULL);
+		
+	////////////////////////// SETUP PI CONTROL ////////////////////
+	pthread_t pid_thread;
+	sem_init(&rcv_y,1,0);
+	pthread_create(&pid_thread, NULL, pid_controller, NULL);
+
+	///////////////////////// SETUP RESPONSE PROCESS /////////////////////
+	pthread_t response_thread;
+	sem_init(&rcv_sig,1,0);
+	pthread_create(&response_thread, NULL, response_process, NULL);
+	
+	pthread_join(pid_thread,NULL);
+	send_to_server("STOP");
+	udp_close( &udp_socket );
+
+	return 0;
+}
+
+
+void* pid_controller( void* a )
+{
+
+	struct timespec period,end;
+	char pid_buf[50];
+	const double reference = 1.0;
+	double error,integral,u,len;
+	const double PERIOD = 0.002;	
+
+	send_to_server("START");
+
+	clock_gettime(CLOCK_REALTIME, &period);
+	clock_gettime(CLOCK_REALTIME, &end);
+	timespec_add_us(&end, 500 * 1000);
+
+	
+	while ( timercmp(&end,&period, >) == 1)
+	{
+		send_to_server("GET");
+		sem_wait(&rcv_y);
+		///////////// CALCULATE VALUE //////////////////
+		error = reference - y; 
+		integral += error * PERIOD;
+		u = Kp * error + Ki * integral;
+
+		len = sprintf(pid_buf,"SET:%f",u);
+		send_to_server(pid_buf);
+
+		timespec_add_us(&period, 2000);
+		clock_nanosleep(&period);
+	}	
+	return a; 
+} 
+
+void* udp_server( void* a )
+{
+	char udp_buf[50];
+	while(1)
+	{	
+		if ( udp_receive(&udp_socket, udp_buf, 50) > 0 )
+		{	
+			switch(udp_buf[0])
+			{
+			case 'G' : 
+				y = atof( &udp_buf[8] );
+				sem_post(&rcv_y);
+				break;
+
+			case 'S' : 
+				sem_post(&rcv_sig);
+				break; 
+
+			}	
+		} 
+		if (RUN_THREADS == 0) break;
+	}
+	return a;
+}
+
+void* response_process( void* a )
+{
+	char answer[11] = "SIGNAL_ACK";
+	while (1)
+	{
+		sem_wait(&rcv_sig);
+		send_to_server(answer);
+		if (RUN_THREADS == 0) break;
+	}
+	return a;
+} 
+
+void send_to_server(char * data) 
+{	
+	pthread_mutex_lock(&udp_lock);
+	udp_send(&udp_socket, data , strlen(data)+1);
+	pthread_mutex_unlock(&udp_lock);
+}
+
+
+
+
+
+
+
